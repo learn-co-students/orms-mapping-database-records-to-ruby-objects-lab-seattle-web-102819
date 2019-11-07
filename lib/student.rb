@@ -3,11 +3,11 @@ class Student
 
   def self.new_from_db(row)
     # create a new Student object given a row from the database
-    new_student = self.new
-    new_student.id = row[0]
-    new_student.name = row[1]
-    new_student.grade = row[2]
-    new_student
+    student = self.new
+    student.id = row[0]
+    student.name = row[1]
+    student.grade = row[2]
+    student
   end
 
   def self.all
@@ -22,48 +22,48 @@ class Student
   def self.find_by_name(name)
     # find the student in the database given a name
     # return a new instance of the Student class
-    sql = "SELECT * FROM students WHERE students.name = ? LIMIT 1"
-    DB[:conn].execute(sql, name).map do |name|
-      self.new_from_db(name)
+    sql = "SELECT * FROM students WHERE name = ? LIMIT 1"
+    DB[:conn].execute(sql, name).map do |row|
+      self.new_from_db(row)
     end.first
   end
 
   def self.all_students_in_grade_9
     sql="SELECT * FROM students WHERE grade=9"
-    DB[:conn].execute(sql).map do |name|
-      self.new_from_db(name)
+    DB[:conn].execute(sql).map do |row|
+      self.new_from_db(row)
     end
   end
 
   def self.students_below_12th_grade
     sql="SELECT * FROM students WHERE grade < 12 "
     students = DB[:conn].execute(sql)
-    students.map do |student|
-      self.new_from_db(student)
+    students.map do |row|
+      self.new_from_db(row)
     end
   end
 
   def self.first_X_students_in_grade_10(number)
     sql="SELECT * FROM students WHERE grade=10"
     students = DB[:conn].execute(sql)
-    students.map do |student|
-      self.new_from_db(student)
+    students.map do |row|
+      self.new_from_db(row)
     end.first(number)
   end
 
   def self.first_student_in_grade_10
     sql="SELECT * FROM students WHERE grade = 10 "
     students = DB[:conn].execute(sql)
-    students.map do |student|
-      self.new_from_db(student)
+    students.map do |row|
+      self.new_from_db(row)
     end.first
   end
 
   def self.all_students_in_grade_X(grade)
-    sql="SELECT * FROM students WHERE grade = grade"
-    students = DB[:conn].execute(sql)
-    students.map do |student|
-      self.new_from_db(student)
+    sql="SELECT * FROM students WHERE grade = ?"
+    students = DB[:conn].execute(sql, grade)
+    students.map do |row|
+      self.new_from_db(row)
     end
   end
 
