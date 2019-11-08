@@ -152,7 +152,7 @@ describe Student do
       end
     end
 
-    describe '.first_student_in_grade_10' do
+    describe '.first_students_in_grade_10' do
       it 'returns the first student in grade 10' do
         pat.name = "Pat"
         pat.grade = 12
