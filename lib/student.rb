@@ -2,12 +2,12 @@ class Student
   attr_accessor :id, :name, :grade
 
   def self.new_from_db(row)
-    # create a new Student object given a row from the database
-    	  student = self.new  # self.new is the same as running Student.new
-    	  student.id = row[0]
-    	  student.name =  row[1]
-    	  student.grade = row[2]
-    	  student  # returna the newly created instance
+  # create a new Student object given a row from the database
+    student = self.new  # self.new is the same as Student.new
+    student.id = row[0]
+    student.name = row[1]
+    student.grade = row[2]
+    student  # returns the newly created instance
   end
 
   def self.all
@@ -17,9 +17,7 @@ class Student
       SELECT * 
       FROM students 
     SQL
-    DB[:conn].execute(sql).map do |row|
-    self.new_from_db(row)
-    end
+    DB[:conn].execute(sql).map {|row| self.new_from_db(row)}
   end
 
   def self.all_students_in_grade_9
@@ -28,9 +26,7 @@ class Student
       FROM students 
       WHERE grade = 9
     SQL
-    DB[:conn].execute(sql).map do |row|
-    self.new_from_db(row)
-    end
+    DB[:conn].execute(sql).map {|row| self.new_from_db(row)}
   end
 
   def self.students_below_12th_grade
@@ -39,9 +35,7 @@ class Student
       FROM students 
       WHERE grade < 12
     SQL
-    DB[:conn].execute(sql).map do |row|
-    self.new_from_db(row)
-    end
+    DB[:conn].execute(sql).map {|row| self.new_from_db(row)}
   end
   
   def self.first_X_students_in_grade_10(x)
@@ -51,9 +45,7 @@ class Student
       WHERE grade = 10
       LIMIT ?
     SQL
-    DB[:conn].execute(sql, x).map do |row|
-      self.new_from_db(row)
-    end
+    DB[:conn].execute(sql, x).map {|row| self.new_from_db(row)}
   end
 
   def self.first_student_in_grade_10
@@ -63,9 +55,7 @@ class Student
       WHERE grade = 10
       LIMIT 1
     SQL
-    DB[:conn].execute(sql).map do |row|
-    self.new_from_db(row)
-    end.first
+    DB[:conn].execute(sql).map {|row| self.new_from_db(row)}.first
   end
 
   def self.all_students_in_grade_X(grade)
@@ -74,9 +64,7 @@ class Student
       FROM students 
       WHERE grade = ?
     SQL
-    DB[:conn].execute(sql, grade).map do |row|
-      self.new_from_db(row)
-    end
+    DB[:conn].execute(sql, grade).map {|row| self.new_from_db(row)}
   end
 
   def self.find_by_name(name)
@@ -86,19 +74,26 @@ class Student
       SELECT * 
       FROM students 
       WHERE name = ? 
-      LIMIT 1
     SQL
-    DB[:conn].execute(sql, name).map do |row|
-      self.new_from_db(row)
-    end.first
+    DB[:conn].execute(sql, name).map {|row| self.new_from_db(row)}.first
   end
+  # def self.find_by_name(name)
+  #   sql = <<-SQL
+  #     SELECT * 
+  #     FROM students 
+  #     WHERE name = ? 
+  #     LIMIT 1
+  #   SQL
+  #   DB[:conn].execute(sql, name).map do |row|
+  #     self.new_from_db(row)
+  #   end.first
+  # end
   
   def save
     sql = <<-SQL
       INSERT INTO students (name, grade) 
       VALUES (?, ?)
     SQL
-
     DB[:conn].execute(sql, self.name, self.grade)
   end
   
@@ -110,7 +105,6 @@ class Student
       grade TEXT
     )
     SQL
-
     DB[:conn].execute(sql)
   end
 
